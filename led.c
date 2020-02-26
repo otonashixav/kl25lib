@@ -22,21 +22,45 @@ void init_led(void){
 	PTB->PDDR |= (MASK(RED_LED_PIN) | MASK(GREEN_LED_PIN));
 	PTD->PDDR |= MASK(BLUE_LED_PIN);
 	
-	clear_led();
+	set_red_led(0);
+	set_green_led(0);
+	set_blue_led(0);
 }
 
-void clear_led() {
-	PTB->PSOR = (MASK(RED_LED_PIN) | MASK(GREEN_LED_PIN));
-	PTD->PSOR = MASK(BLUE_LED_PIN);
+void set_led_color(color_t color) {
+	if (MASK(2) & color) {
+		set_red_led(1);
+	}
+	
+	if (MASK(1) & color) {
+		set_green_led(1);
+	}
+	
+	if (MASK(0) & color) {
+		set_blue_led(1);
+	}
 }
 
-void set_led(color_t color) {
-	clear_led();
-	if (color == LED_RED) {
+void set_red_led(unsigned int value) {
+	if (value) {
 		PTB->PCOR = MASK(RED_LED_PIN);
-	} else if (color == LED_GREEN) {
+	} else {
+		PTB->PSOR = MASK(RED_LED_PIN);
+	}
+}
+
+void set_green_led(unsigned int value) {
+	if (value) {
 		PTB->PCOR = MASK(GREEN_LED_PIN);
-	} else if (color == LED_BLUE) {
-		PTD->PCOR = MASK(BLUE_LED_PIN);
+	} else {
+		PTB->PSOR = MASK(GREEN_LED_PIN);
+	}
+}
+
+void set_blue_led(unsigned int value) {
+	if (value) {
+		PTB->PCOR = MASK(BLUE_LED_PIN);
+	} else {
+		PTB->PSOR = MASK(BLUE_LED_PIN);
 	}
 }
