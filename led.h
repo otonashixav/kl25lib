@@ -1,3 +1,6 @@
+#include "common.h"
+#include "MKL25Z4.h"
+
 typedef enum color_t {
 	LED_BLUE = 0b001,
 	LED_GREEN = 0b010,
@@ -24,18 +27,18 @@ void set_led(color_t color);
  * Sets the intensity of the red led.
  * @param[in] value value to set the led to (0 or 1 currently; possible upgrade to higher bit color).
  */
-void set_red_led(unsigned int value);
+void set_red_led(uint8_t value);
 
 
 /**
  * Sets the intensity of the green led.
  * @param[in] value value to set the led to (0 or 1 currently; possible upgrade to higher bit color).
  */
-void set_green_led(unsigned int value);
+void set_green_led(uint8_t value);
 
 
 /**
  * Sets the intensity of the blue led.
  * @param[in] value value to set the led to (0 or 1 currently; possible upgrade to higher bit color).
  */
-void set_blue_led(unsigned int value);
+void set_blue_led(uint8_t value);

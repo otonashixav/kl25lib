@@ -1,8 +1,6 @@
 #define RED_LED_PIN     18 // PortB Pin 18
 #define GREEN_LED_PIN   19 // PortB Pin 19
 #define BLUE_LED_PIN    1  // PortD Pin 1
-#include "common.h"
-#include "MKL25Z4.h"
 #include "led.h"
 
 void init_led(void){
@@ -41,7 +39,7 @@ void set_led_color(color_t color) {
 	}
 }
 
-void set_red_led(unsigned int value) {
+void set_red_led(uint8_t value) {
 	if (value) {
 		PTB->PCOR = MASK(RED_LED_PIN);
 	} else {
@@ -49,7 +47,7 @@ void set_red_led(unsigned int value) {
 	}
 }
 
-void set_green_led(unsigned int value) {
+void set_green_led(uint8_t value) {
 	if (value) {
 		PTB->PCOR = MASK(GREEN_LED_PIN);
 	} else {
@@ -57,7 +55,7 @@ void set_green_led(unsigned int value) {
 	}
 }
 
-void set_blue_led(unsigned int value) {
+void set_blue_led(uint8_t value) {
 	if (value) {
 		PTB->PCOR = MASK(BLUE_LED_PIN);
 	} else {
