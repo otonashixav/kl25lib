@@ -1,6 +1,6 @@
-#include <stdint.h>
 #ifndef UART0_H
 #define UART0_H
+typedef unsigned int uint32_t;
 /**
  * Initiates the UART0 module with a specified baud rate
  * @param [in] baud_rate the baud rate of the serial communications

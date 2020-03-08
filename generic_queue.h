@@ -14,7 +14,7 @@
  *  QUEUE_FUNCTION_PARAMS: if the data type is a function pointer, this can be
  *                         used to insert code after the data type e.g. 
  *                         the square bracketed: void (*data[)(void)]
- *  QUEUE_MAX_SIZE_TYPE: if the max size exceeds 256, define an adequate type here
+ *  QUEUE_MAX_SIZE_TYPE: if the max size exceeds 255, define an adequate type here
  */
 
 #ifndef QUEUE_TYPE

@@ -31,12 +31,18 @@
 
 // non-configurables; technically UART0 supports variable oversampling but whatever
 #define OVERSAMPLING_RATE 16
-#define DIVISOR(BAUD_RATE) (((CORE_CLOCK) / ((BAUD_RATE) * ((OVERSAMPLING_RATE) / 2)) + 1) / 2)
+#ifdef UART0_H
+#define UART_CLOCK CORE_CLOCK
+#else
+#define UART_CLOCK BUS_CLOCK
+#endif
+
+#define DIVISOR(BAUD_RATE) (((UART_CLOCK) / ((BAUD_RATE) * ((OVERSAMPLING_RATE) / 2)) + 1) / 2)
 
 // define queues
 #define QUEUE_TYPE data_queue
 #define QUEUE_DATA_TYPE unsigned char
-#define QUEUE_MAX_SIZE 256
+#define QUEUE_MAX_SIZE 255
 #include "generic_queue.h"
 
 data_queue transmit_buffer = {{0}, 0, 0, 0};
@@ -56,6 +62,16 @@ IRQ(UART_IRQ,
 
 #define INIT(N) CONCAT(N, _init)
 void INIT(UART_MODULE_NAME)(uint32_t baud_rate) {
+    // Disable all transmitter/receivers
+    UART->C2 &= ~(UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_TIE_MASK | UART_C2_RIE_MASK);
+
+    // Extra UART0 specific config
+    #ifdef UART0_H
+    SIM->SOPT2 &= ~SIM_SOPT2_UART0SRC_MASK;
+    SIM->SOPT2 |= SIM_SOPT2_UART0SRC(1);
+    UART->C4 = UART0_C4_OSR(OVERSAMPLING_RATE);
+    #endif
+
     // Enable required clock gates
     SIM->SCGC4 |= UART_CLOCK_MASK;
     SIM->SCGC5 |= PORT_CLOCK_MASK;
@@ -63,9 +79,6 @@ void INIT(UART_MODULE_NAME)(uint32_t baud_rate) {
     // Set pins to UART
     PORT->PCR[TX_PIN] = TX_PIN_MUX;
     PORT->PCR[RX_PIN] = RX_PIN_MUX;
-
-    // Disable all transmitter/receivers
-    UART->C2 &= ~(UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_TIE_MASK | UART_C2_RIE_MASK);
     
     // Set baud rate
     UART->BDH = UART_BDH_SBR(DIVISOR(baud_rate) >> 8);
@@ -74,7 +87,6 @@ void INIT(UART_MODULE_NAME)(uint32_t baud_rate) {
     // Should be configurable?
     // Usables are parity enable/select (C1), rx (S2) and tx (C3) inverts
     UART->C1 = UART->S2 = UART->C3 = 0;
-    UART->C4 = UART_C4_OSR(OVERSAMPLING_RATE); // only valid for UART0, and default is 16
 
     // Enable everything
     ENABLE_IRQ(UART_IRQ, 2);
