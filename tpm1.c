@@ -1,2 +1,2 @@
 #include "tpm1.h"
-#include "generic_tpm.h"
+#include "__generic_tpm.h"

@@ -46,7 +46,7 @@
 #define QUEUE_TYPE data_queue
 #define QUEUE_DATA_TYPE volatile uint8_t
 #define QUEUE_MAX_SIZE 255
-#include "generic_queue.h"
+#include "__generic_queue.h"
 
 data_queue transmit_buffer = {{0}, 0, 0, 0};
 data_queue receive_buffer = {{0}, 0, 0, 0};
