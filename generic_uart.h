@@ -1,3 +1,6 @@
+#include "common.h"
+#include "MKL25Z4.h"
+
 #ifndef UART_CLOCK_MASK
 #error Missing #define UART_CLOCK_MASK
 #endif
@@ -41,7 +44,7 @@
 
 // define queues
 #define QUEUE_TYPE data_queue
-#define QUEUE_DATA_TYPE unsigned char
+#define QUEUE_DATA_TYPE volatile uint8_t
 #define QUEUE_MAX_SIZE 255
 #include "generic_queue.h"
 
@@ -77,8 +80,10 @@ void INIT(UART_MODULE_NAME)(uint32_t baud_rate) {
     SIM->SCGC5 |= PORT_CLOCK_MASK;
 
     // Set pins to UART
-    PORT->PCR[TX_PIN] = TX_PIN_MUX;
-    PORT->PCR[RX_PIN] = RX_PIN_MUX;
+    PORT->PCR[TX_PIN] &= ~PORT_PCR_MUX_MASK;
+    PORT->PCR[RX_PIN] &= ~PORT_PCR_MUX_MASK;
+    PORT->PCR[TX_PIN] |= PORT_PCR_MUX(TX_PIN_MUX);
+    PORT->PCR[RX_PIN] |= PORT_PCR_MUX(RX_PIN_MUX);
     
     // Set baud rate
     UART->BDH = UART_BDH_SBR(DIVISOR(baud_rate) >> 8);
@@ -116,5 +121,5 @@ void FLUSH(UART_MODULE_NAME)(void) {
 int OVERFLOW_FLAG(UART_MODULE_NAME)(void) {
     int flag = overflow_flag;
     overflow_flag = 0;
-    return overflow_flag;
+    return flag;
 }
