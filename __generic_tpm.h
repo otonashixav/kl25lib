@@ -56,19 +56,19 @@ void INIT(TPM_MODULE_NAME)(uint32_t cpwms, uint32_t cmod, uint32_t prescaler) {
     #endif
 }
 
-#define SET_MOD(N) CONCAT(N, _init)
+#define SET_MOD(N) CONCAT(N, _set_mod)
 inline void SET_MOD(TPM_MODULE_NAME)(uint32_t mod) {
     TPM->MOD = TPM_MOD_MOD(mod);
 }
 
-#define SET_CHANNEL_MODE(N) CONCAT(N, _init)
+#define SET_CHANNEL_MODE(N) CONCAT(N, _set_channel_mode)
 void SET_CHANNEL_MODE(TPM_MODULE_NAME)(unsigned int channel, tpm_channel_mode_t mode) {
     TPM->CONTROLS[channel].CnSC &= ~(TPM_CnSC_MSB_MASK | TPM_CnSC_MSA_MASK | TPM_CnSC_ELSB_MASK | TPM_CnSC_ELSA_MASK);
     TPM->CONTROLS[channel].CnSC |= mode;
     
 }
 
-#define SET_CHANNEL_VAL(N) CONCAT(N, _init)
+#define SET_CHANNEL_VAL(N) CONCAT(N, _set_channel_val)
 inline void SET_CHANNEL_VAL(TPM_MODULE_NAME)(unsigned int channel, uint32_t val) {
     TPM->CONTROLS[channel].CnV = TPM_CnV_VAL(val);
 }
