@@ -62,7 +62,7 @@ IRQ(UART_IRQ,
     }
     
     if (UART->S1 & UART_S1_TDRE_MASK) { // able to transmit
-        if (!data_queue_empty(&transmit_buffer)) {
+        if (!data_queue_is_empty(&transmit_buffer)) {
             data_queue_pop(&transmit_buffer, &(UART->D));
         }
     }
