@@ -10,6 +10,7 @@
 #define RX_PIN_MUX 4
 #define UART UART0
 #define UART_IRQ UART0_IRQ
+#define IRQ_PRIORITY 1
 #define UART_MODULE_NAME uart0
 
 typedef unsigned int uint32_t;

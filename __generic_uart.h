@@ -28,6 +28,9 @@
 #ifndef UART_IRQ
 #error MISSING #define UART_IRQ
 #endif
+#ifndef IRQ_PRIORITY
+#error MISSING #define IRQ_PRIORITY
+#endif
 #ifndef UART_MODULE_NAME
 #error MISSING #define UART_MODULE_NAME
 #endif
@@ -59,14 +62,16 @@ IRQ(UART_IRQ,
     }
     
     if (UART->S1 & UART_S1_TDRE_MASK) { // able to transmit
-        data_queue_pop(&transmit_buffer, &(UART->D)); // pop does not write to address on failure
+        if (!data_queue_empty(&transmit_buffer)) {
+            data_queue_pop(&transmit_buffer, &(UART->D));
+        }
     }
 )
 
 #define INIT(N) CONCAT(N, _init)
 void INIT(UART_MODULE_NAME)(uint32_t baud_rate) {
     // Disable all transmitter/receivers
-    UART->C2 &= ~(UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_TIE_MASK | UART_C2_RIE_MASK);
+    UART->C2 &= ~((uint8_t) (UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_TIE_MASK | UART_C2_RIE_MASK));
 
     // Extra UART0 specific config
     #ifdef UART0_H
@@ -94,7 +99,7 @@ void INIT(UART_MODULE_NAME)(uint32_t baud_rate) {
     UART->C1 = UART->S2 = UART->C3 = 0;
 
     // Enable everything
-    ENABLE_IRQ(UART_IRQ, 2);
+    ENABLE_IRQ(UART_IRQ, IRQ_PRIORITY);
     UART->C2 |= UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_TIE_MASK | UART_C2_RIE_MASK;
 }
 
@@ -110,9 +115,6 @@ int TRANSMIT(UART_MODULE_NAME)(unsigned char data) {
 
 #define FLUSH(N) CONCAT(N, _flush)
 void FLUSH(UART_MODULE_NAME)(void) {
-    while (UART->S1 & UART_S1_RDRF_MASK) {
-        unsigned char dummy = UART->D; // clear anything left in register
-    }
     data_queue_clear(&receive_buffer); // clear buffer
     overflow_flag = 0;
 }
