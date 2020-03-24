@@ -51,10 +51,10 @@
 #define QUEUE_MAX_SIZE 255
 #include "__generic_queue.h"
 
-data_queue transmit_buffer = {{0}, 0, 0, 0};
-data_queue receive_buffer = {{0}, 0, 0, 0};
+static data_queue transmit_buffer = {{0}, 0, 0, 0};
+static data_queue receive_buffer = {{0}, 0, 0, 0};
 
-int overflow_flag = 0;
+static int overflow_flag = 0;
 
 IRQ(UART_IRQ, 
     if (UART->S1 & UART_S1_RDRF_MASK) { // data to receive
