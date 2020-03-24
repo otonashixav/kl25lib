@@ -3,16 +3,6 @@
 #include "tpm_channel_mode_enum.h"
 typedef unsigned int uint32_t;
 
-#define TPM_CLOCK_MASK SIM_SCGC6_TPM1_MASK
-#define PORT_CLOCK_MASK SIM_SCGC5_PORTB_MASK
-#define PORT PORTB
-#define TPM TPM1
-#define TPM_MODULE_NAME tpm1
-#define CHANNEL_0_PIN 0
-#define CHANNEL_0_PIN_MUX 3
-#define CHANNEL_1_PIN 1
-#define CHANNEL_1_PIN_MUX 3
-
 /**
  * Initializes TPM1
  * @param[in] cpwms      the value of cpwms; 1 when using PWM and center alignment is desired, else 0
