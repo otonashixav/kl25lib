@@ -56,7 +56,7 @@ typedef struct QUEUE_TYPE {
  * @param[in] queue  the queue to clear
  */
 #define CLEAR(N) CONCAT(N, _clear)
-void CLEAR(QUEUE_TYPE)(QUEUE_TYPE *queue) {
+static void CLEAR(QUEUE_TYPE)(QUEUE_TYPE *queue) {
     queue->head = 0;
     queue->tail = 0;
     queue->size = 0;
@@ -68,7 +68,7 @@ void CLEAR(QUEUE_TYPE)(QUEUE_TYPE *queue) {
  * @return whether the queue is empty
  */
 #define IS_EMPTY(N) CONCAT(N, _is_empty)
-int IS_EMPTY(QUEUE_TYPE)(QUEUE_TYPE *queue) {
+static int IS_EMPTY(QUEUE_TYPE)(QUEUE_TYPE *queue) {
     return queue->size == 0;
 }
 
@@ -78,7 +78,7 @@ int IS_EMPTY(QUEUE_TYPE)(QUEUE_TYPE *queue) {
  * @return whether the queue is full
  */
 #define IS_FULL(N) CONCAT(N, _is_full)
-int IS_FULL(QUEUE_TYPE)(QUEUE_TYPE *queue) {
+static int IS_FULL(QUEUE_TYPE)(QUEUE_TYPE *queue) {
     return queue->size == QUEUE_MAX_SIZE;
 }
 
@@ -89,7 +89,7 @@ int IS_FULL(QUEUE_TYPE)(QUEUE_TYPE *queue) {
  * @return 0 on success and 1 on full queue
  */
 #define PUSH(N) CONCAT(N, _push)
-int PUSH(QUEUE_TYPE) (QUEUE_TYPE *queue, QUEUE_DATA_TYPE object QUEUE_FUNCTION_PARAMS) {
+static int PUSH(QUEUE_TYPE) (QUEUE_TYPE *queue, QUEUE_DATA_TYPE object QUEUE_FUNCTION_PARAMS) {
     if (IS_FULL(QUEUE_TYPE)(queue)) {
         return 1;
     }
@@ -106,7 +106,7 @@ int PUSH(QUEUE_TYPE) (QUEUE_TYPE *queue, QUEUE_DATA_TYPE object QUEUE_FUNCTION_P
  * @return 0 on success and 1 on empty queue
  */
 #define POP(N) CONCAT(N, _pop)
-int POP(QUEUE_TYPE)(QUEUE_TYPE *queue, QUEUE_DATA_TYPE* object QUEUE_FUNCTION_PARAMS) {
+static int POP(QUEUE_TYPE)(QUEUE_TYPE *queue, QUEUE_DATA_TYPE* object QUEUE_FUNCTION_PARAMS) {
     if (IS_EMPTY(QUEUE_TYPE)(queue)) {
         return 1;
     }
