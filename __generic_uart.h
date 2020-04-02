@@ -110,7 +110,7 @@ int RECEIVE(UART_MODULE_NAME)(unsigned char *data) {
 
 #define TRANSMIT(N) CONCAT(N, _transmit)
 int TRANSMIT(UART_MODULE_NAME)(unsigned char data) {
-    return data_queue_push(&transmit_buffer, data);
+    return 0; // data_queue_push(&transmit_buffer, data);
 }
 
 #define FLUSH(N) CONCAT(N, _flush)
