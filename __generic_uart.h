@@ -38,9 +38,9 @@
 // non-configurables; technically UART0 supports variable oversampling but whatever
 #define OVERSAMPLING_RATE 16
 #ifdef UART0_H
-#define UART_CLOCK CORE_CLOCK
+#define UART_CLOCK DEFAULT_SYSTEM_CLOCK
 #else
-#define UART_CLOCK BUS_CLOCK
+#define UART_CLOCK (DEFAULT_SYSTEM_CLOCK / 2)
 #endif
 
 #define DIVISOR(BAUD_RATE) (((UART_CLOCK) / ((BAUD_RATE) * ((OVERSAMPLING_RATE) / 2)) + 1) / 2)
@@ -51,7 +51,7 @@
 #define QUEUE_MAX_SIZE 255
 #include "__generic_queue.h"
 
-static data_queue transmit_buffer = {{0}, 0, 0, 0};
+// static data_queue transmit_buffer = {{0}, 0, 0, 0};
 static data_queue receive_buffer = {{0}, 0, 0, 0};
 
 static int overflow_flag = 0;
@@ -60,18 +60,18 @@ IRQ(UART_IRQ,
     if (UART->S1 & UART_S1_RDRF_MASK) { // data to receive
         overflow_flag |= data_queue_push(&receive_buffer, UART->D); // 1 on full buffer
     }
-    
+    /*
     if (UART->S1 & UART_S1_TDRE_MASK) { // able to transmit
         if (!data_queue_is_empty(&transmit_buffer)) {
             data_queue_pop(&transmit_buffer, &(UART->D));
         }
-    }
+    }*/
 )
 
 #define INIT(N) CONCAT(N, _init)
 void INIT(UART_MODULE_NAME)(uint32_t baud_rate) {
     // Disable all transmitter/receivers
-    UART->C2 &= ~((uint8_t) (UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_TIE_MASK | UART_C2_RIE_MASK));
+    // UART->C2 &= ~((uint8_t) (UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_TIE_MASK | UART_C2_RIE_MASK));
 
     // Extra UART0 specific config
     #ifdef UART0_H
@@ -85,9 +85,9 @@ void INIT(UART_MODULE_NAME)(uint32_t baud_rate) {
     SIM->SCGC5 |= PORT_CLOCK_MASK;
 
     // Set pins to UART
-    PORT->PCR[TX_PIN] &= ~PORT_PCR_MUX_MASK;
+    // PORT->PCR[TX_PIN] &= ~PORT_PCR_MUX_MASK;
     PORT->PCR[RX_PIN] &= ~PORT_PCR_MUX_MASK;
-    PORT->PCR[TX_PIN] |= PORT_PCR_MUX(TX_PIN_MUX);
+    // PORT->PCR[TX_PIN] |= PORT_PCR_MUX(TX_PIN_MUX);
     PORT->PCR[RX_PIN] |= PORT_PCR_MUX(RX_PIN_MUX);
     
     // Set baud rate
@@ -100,7 +100,7 @@ void INIT(UART_MODULE_NAME)(uint32_t baud_rate) {
 
     // Enable everything
     ENABLE_IRQ(UART_IRQ, IRQ_PRIORITY);
-    UART->C2 |= UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_TIE_MASK | UART_C2_RIE_MASK;
+    UART->C2 |= UART_C2_RE_MASK | UART_C2_RIE_MASK; // UART_C2_TE_MASK | UART_C2_RE_MASK | UART_C2_TIE_MASK | UART_C2_RIE_MASK;
 }
 
 #define RECEIVE(N) CONCAT(N, _receive)

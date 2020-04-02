@@ -1,7 +1,7 @@
 #ifndef TPM2_H
 #define TPM2_H
 #include "tpm_channel_mode_enum.h"
-typedef unsigned int uint32_t;
+#include <stdint.h>
 
 /**
  * Initializes TPM2
