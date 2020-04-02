@@ -1,6 +1,6 @@
 #ifndef UART2_H
 #define UART2_H
-typedef unsigned int uint32_t;
+#include <stdint.h>
 
 /**
  * Initiates the UART2 module with a specified baud rate

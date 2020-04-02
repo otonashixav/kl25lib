@@ -1,6 +1,6 @@
 #ifndef UART1_H
 #define UART1_H
-typedef unsigned int uint32_t;
+#include <stdint.h>
 
 /**
  * Initiates the UART1 module with a specified baud rate
